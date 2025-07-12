@@ -1,0 +1,129 @@
+
+---
+title: "Plotly Demo"
+author: "Jacob Robinson"
+date: "`r Sys.Date()`"
+output: 
+  ioslides_presentation:
+    widescreen: true
+    smaller: true
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+# Load required libraries
+library(plotly)
+library(dplyr)
+library(ggplot2)
+```
+
+## Introduction
+
+This presentation demonstrates interactive data visualization using Plotly in R.
+
+## Sample Data Analysis
+
+Let's analyze some sample data:
+
+```{r data-prep}
+# Create sample dataset
+set.seed(123)
+sample_data <- data.frame(
+  category = rep(c("A", "B", "C", "D"), each = 25),
+  value = c(rnorm(25, 10, 2), rnorm(25, 15, 3), rnorm(25, 12, 2.5), rnorm(25, 8, 1.5)),
+  time = rep(1:25, 4)
+)
+
+# Preview the data
+head(sample_data)
+```
+
+## Interactive Scatter Plot
+
+```{r plotly-chart}
+# Create interactive scatter plot
+p <- sample_data %>%
+  plot_ly(
+    x = ~time, 
+    y = ~value, 
+    color = ~category,
+    type = 'scatter', 
+    mode = 'markers',
+    marker = list(size = 10, opacity = 0.7),
+    hovertemplate = paste(
+      "<b>Category:</b> %{color}<br>",
+      "<b>Time:</b> %{x}<br>",
+      "<b>Value:</b> %{y:.2f}<br>",
+      "<extra></extra>"
+    )
+  ) %>%
+  layout(
+    title = "Interactive Scatter Plot by Category",
+    xaxis = list(title = "Time"),
+    yaxis = list(title = "Value"),
+    hovermode = "closest"
+  )
+
+p
+```
+
+## Box Plot Comparison
+
+```{r box-plot}
+# Create interactive box plot
+box_plot <- sample_data %>%
+  plot_ly(
+    y = ~value, 
+    x = ~category, 
+    type = 'box',
+    boxpoints = 'outliers',
+    hovertemplate = paste(
+      "<b>Category:</b> %{x}<br>",
+      "<b>Value:</b> %{y:.2f}<br>",
+      "<extra></extra>"
+    )
+  ) %>%
+  layout(
+    title = "Distribution Comparison by Category",
+    xaxis = list(title = "Category"),
+    yaxis = list(title = "Value")
+  )
+
+box_plot
+```
+
+## Time Series Visualization
+
+```{r time-series}
+# Create time series plot
+time_series <- sample_data %>%
+  plot_ly(
+    x = ~time, 
+    y = ~value, 
+    color = ~category,
+    type = 'scatter', 
+    mode = 'lines+markers',
+    line = list(width = 2),
+    marker = list(size = 6)
+  ) %>%
+  layout(
+    title = "Time Series by Category",
+    xaxis = list(title = "Time"),
+    yaxis = list(title = "Value"),
+    hovermode = "x unified"
+  )
+
+time_series
+```
+
+## Summary
+
+This presentation demonstrated three types of interactive visualizations using Plotly:
+
+- **Scatter Plot**: Shows individual data points with hover information
+- **Box Plot**: Compares distributions across categories  
+- **Time Series**: Displays trends over time with multiple series
+
+The interactive features allow viewers to hover, zoom, pan, and toggle legend items.
